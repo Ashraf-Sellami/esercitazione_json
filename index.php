@@ -27,7 +27,7 @@ $json = '{
         "date": "2024-08-23",
         "min": 10.5509090909091,
         "max": 21.5,
-        "average": 16.4605584634221,
+        "average": 16.4605584634221, 
         "sample_size": 264
       },
       {
@@ -74,43 +74,24 @@ $json = '{
       }
     ]
   }';
-   
-  $obj = json_decode($json,true); // ho aggiuunto il true che è necessario per avere l'elemento come array
-  $json_elements = count($obj['data_points']); // variabile per avere la certezza del numero di elementi all'interno del json
 
-  
-//   print($obj->{'data_points'}[0]->{'date'});
+$obj = json_decode($json, true); // ho aggiuunto il true che è necessario per avere l'elemento come array
+$json_elements = count($obj['data_points']); // variabile per avere la certezza del numero di elementi all'interno del json
 
 
-$numero_giorni=7; //variabile di supporto che indica l'ultima settimana ma può essere cambiata per necessità
 
-    
-    for($i=$json_elements-1; $i>($json_elements-$numero_giorni-1);$i--) //vado a ciclare a partire dall n-esimo elemento - 1 l'array
-    {
-        //calcolo la media pesata usando i due elementi trovati entrando "l'array"
-        $media_pesata = ($obj['data_points'][$i]['average'])/($obj['data_points'][$i]['sample_size']); 
 
-        // print_r ('data :'. $obj['data_points'][$i]['date']);
-        // echo "\n";
-        // echo 'media_pesata: '. $media_pesata;
-        // echo "\n";
+$prodotto_pesato = 0;
+$somma_pesata = 0;
+$numero_giorni = 7; //variabile di supporto che indica l'ultima settimana ma può essere cambiata per necessità
 
-        //creo un array esterno nel quale immagazzino la data e la media pesata per non modificare l'array originale
-        $array_supporto[$i]=[       
-            [
-                "data" => $obj['data_points'][$i]['date'],
-                "media pesata" => $media_pesata
-            ],
-            
-        ];
 
-    }
-    //ciclo gli elementi nell'array d'appoggio per visualizzare i dati
-    for($i=$json_elements-1; $i>($json_elements-$numero_giorni-1);$i--) 
-    {
-        print_r($array_supporto[$i]);
-    }
-    
-    
-    
-    ?>
+for ($i = $json_elements - 1; $i > ($json_elements - $numero_giorni - 1); $i--) //vado a ciclare a partire dall n-esimo elemento - 1 l'array
+{
+    //calcolo la media pesata usando i due elementi trovati entrando "l'array"
+    $prodotto_pesato += ($obj['data_points'][$i]['average']) * ($obj['data_points'][$i]['sample_size']);
+    $somma_pesata += ($obj['data_points'][$i]['sample_size']);
+}
+
+$media_pesata = $prodotto_pesato / $somma_pesata;
+echo 'media pesata :' . $media_pesata;
